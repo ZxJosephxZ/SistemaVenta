@@ -4,7 +4,12 @@
  */
 package vista;
 
+import controlador.Ctrl_Usuario;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.JOptionPane;
+import modelo.Usuario;
 
 /**
  *
@@ -21,6 +26,12 @@ public class FrmLogin extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Login - SISTEMA DE VENTAS");
         this.setSize(new Dimension(700,500));
+    }
+    
+    @Override
+    public Image getIconImage(){
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/ventas.png"));
+        return retValue;
     }
 
     /**
@@ -44,6 +55,7 @@ public class FrmLogin extends javax.swing.JFrame {
         jButton_IniciarSesion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImage(getIconImage());
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(51, 153, 255));
@@ -95,11 +107,26 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/password.png"))); // NOI18N
 
         txt_user.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txt_user.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_userKeyPressed(evt);
+            }
+        });
 
         txt_password.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txt_password.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_passwordKeyPressed(evt);
+            }
+        });
 
         jButton_IniciarSesion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton_IniciarSesion.setText("Iniciar Sesion");
+        jButton_IniciarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_IniciarSesionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -144,6 +171,25 @@ public class FrmLogin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton_IniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_IniciarSesionActionPerformed
+        this.Login();
+    }//GEN-LAST:event_jButton_IniciarSesionActionPerformed
+
+    //se encargan de pasar de campos al presionar el enter -> click der, key, keypressed
+    private void txt_userKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_userKeyPressed
+        if(evt.getKeyCode() == evt.VK_ENTER)
+        {
+            txt_password.requestFocus();
+        }
+    }//GEN-LAST:event_txt_userKeyPressed
+
+    private void txt_passwordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_passwordKeyPressed
+        if(evt.getKeyCode() == evt.VK_ENTER)
+        {
+            this.Login();
+        }
+    }//GEN-LAST:event_txt_passwordKeyPressed
 
     /**
      * @param args the command line arguments
@@ -192,4 +238,27 @@ public class FrmLogin extends javax.swing.JFrame {
     private javax.swing.JPasswordField txt_password;
     private javax.swing.JTextField txt_user;
     // End of variables declaration//GEN-END:variables
+   //establece el inicio de sesion por interfaz
+    private void Login()
+    {
+        if(!txt_user.getText().isEmpty() && !txt_password.getText().isEmpty())
+        {
+            Ctrl_Usuario controlUsuario = new Ctrl_Usuario();
+            Usuario usuario = new Usuario();
+            usuario.setUsuario(txt_user.getText().trim());
+            usuario.setPassword(txt_password.getText().trim());
+            if(controlUsuario.loginUser(usuario)){
+                //JOptionPane.showMessageDialog(null, "Login correcto");
+                FrmMenu menu = new FrmMenu();
+                menu.setVisible(true);
+                this.dispose();
+            }else
+            {
+                JOptionPane.showMessageDialog(null, "Usuario o clave incorrectos");
+            }
+        }else
+        {
+            JOptionPane.showMessageDialog(null, "Ingrese sus credenciales");
+        }
+    }
 }

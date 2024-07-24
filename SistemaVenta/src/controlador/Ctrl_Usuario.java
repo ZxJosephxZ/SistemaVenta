@@ -17,6 +17,7 @@ import modelo.Usuario;
  * @author Joseph
  */
 public class Ctrl_Usuario {
+    //Controla el inicio de sesion exitoso en la base de datos
     public boolean loginUser(Usuario objeto)
     {
         boolean respuesta = false;
